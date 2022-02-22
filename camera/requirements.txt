@@ -1,0 +1,3 @@
+numpy==1.19.5
+RPi.GPIO==0.7.0
+websockets==10.2

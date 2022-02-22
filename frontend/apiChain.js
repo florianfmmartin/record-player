@@ -112,13 +112,12 @@ function splitGuessAtHyphen(safeGuessArray) {
 }
 
 
-function apiChain(imagePath, req, res) {
-  //console.log("Image Path: " + imagePath);
+function apiChain(imagePath, token) {
   let data = {};
   
   return askGoogleVision(data, imagePath)
   .then(checkGoogleVisionGuess)
-  .then(askSpotifyApi.bind(null, req.cookies.spotifyAccessToken))
+  .then(askSpotifyApi.bind(null, token))
   .then((data) => {
     data.error = false;
     return data;
