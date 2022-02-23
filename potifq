@@ -1,0 +1,10 @@
+● spotifyd.service - A spotify playing daemon
+     Loaded: loaded (/home/pi/.config/systemd/user/spotifyd.service; enabled; vendor preset: enabled)
+     Active: activating (auto-restart) (Result: exit-code) since Wed 2022-02-23 09:46:44 EST; 483ms ago
+       Docs: https://github.com/Spotifyd/spotifyd
+    Process: 5359 ExecStart=/usr/bin/spotifyd --no-daemon [0;1;31m(code=exited, status=1/FAILURE)[0m
+   Main PID: 5359 (code=exited, status=1/FAILURE)
+        CPU: 21ms
+
+fév 23 09:46:44 raspberrypi systemd[971]: [0;1;39m[0;1;31m[0;1;39mspotifyd.service: Main process exited, code=exited, status=1/FAILURE[0m
+fév 23 09:46:44 raspberrypi systemd[971]: [0;1;38;5;185m[0;1;39m[0;1;38;5;185mspotifyd.service: Failed with result 'exit-code'.[0m

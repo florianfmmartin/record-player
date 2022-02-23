@@ -1,5 +1,6 @@
 const axios = require("axios");
-const apiChain = require("./apiChain")
+const apiChain = require("./apiChain");
+const { exec } = require("child_process");
 
 let access_token = "";
 let expiration = 0;
@@ -35,10 +36,20 @@ const start = async () => {
       await auth();
     }
 
-    const cameraReq = await apiChain("/photo/photo_transformed.jpg", access_token);
-    const albumId = cameraReq.albumId;
-    console.log(albumId);
-
+    const cameraReq = await apiChain(
+      "/photo/photo_transformed.jpg",
+      access_token
+    );
+    const spotifyUri = cameraReq.spotifyData.albums.items[0].uri;
+    exec(`spt play --uri '${spotifyUri}'`, (error, stdout, stderr) => {
+      if (error) {
+        console.log(`error: ${error.message}`);
+      }
+      if (stderr) {
+        console.log(`stderr: ${stderr}`);
+      }
+      console.log(stdout);
+    });
   } catch (err) {
     console.log("oups", err);
   }

@@ -79,6 +79,7 @@ async function askSpotifyApi(spotifyToken, data) {
     throw('No items: ' + splitSafeGuessArray + '(' + safeGuessArray + ')');
   }
   data.albumId = albumId;
+  data.spotifyData = spotifyData;
   return data;
 }
 
