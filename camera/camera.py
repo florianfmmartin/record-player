@@ -58,7 +58,7 @@ async def take_photo():
     print("Button pressed...")
 
     print("Taking photo")
-    os.system("raspistill -o photo.jpg -vf -n")
+    os.system("raspistill -o photo.jpg -vf -hf -n")
 
     print("Reading photo")
     img = cv2.imread("photo.jpg")
@@ -73,9 +73,10 @@ async def take_photo():
     # cv2.imwrite("distort.jpg", tmp)
 
     rows, cols, ch = img.shape
-    f_s = 720
+    f_s = 1500
 
-    pts1 = np.float32([[680, 635], [1750, 650], [0, 1820], [2570, 1765]])
+    # pts1 = np.float32([[680, 635], [1750, 650], [0, 1820], [2570, 1765]])
+    pts1 = np.float32([[384, 153], [2022, 54], [201, 1809], [2301, 1704]])
     pts2 = np.float32([[0, 0], [f_s, 0], [0, f_s], [f_s, f_s]])
 
     M = cv2.getPerspectiveTransform(pts1, pts2)
@@ -95,9 +96,23 @@ print("Press `e` to exit")
 # calibrate -- doesnt work
 # calibrate()
 
-while (True):
-    message = input()
-    if (message == "e"):
-        exit()
-    elif (message == ""):
-        asyncio.run(take_photo())
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+
+last_click = 0
+click = False
+
+while True:
+    now = time.time()
+    if GPIO.input(10) == GPIO.HIGH and (now - last_click) > 0.4 and not click:
+        last_click = now
+        click = True
+    elif GPIO.input(10) == GPIO.LOW and (now - last_click) < 1 and click:
+        click = False
+        # asyncio.run(take_photo())
+    elif GPIO.input(10) == GPIO.LOW and (now - last_click) > 2 and click:
+        click = False
+        os.system("spt pb -t")
+
+
