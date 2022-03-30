@@ -91,8 +91,6 @@ async def take_photo():
 
     print("Done. Waiting for next button press...\n")
 
-print("Press `e` to exit")
-
 # calibrate -- doesnt work
 # calibrate()
 
