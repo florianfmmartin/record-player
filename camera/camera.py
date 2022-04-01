@@ -75,8 +75,8 @@ async def take_photo():
     rows, cols, ch = img.shape
     f_s = 1500
 
-    # pts1 = np.float32([[680, 635], [1750, 650], [0, 1820], [2570, 1765]])
-    pts1 = np.float32([[384, 153], [2022, 54], [201, 1809], [2301, 1704]])
+    # pts1 = np.float32([[384, 153], [2022, 54], [201, 1809], [2301, 1704]])
+    pts1 = np.float32([[600, 165], [1977, 117], [54, 1590], [2565, 1599]])
     pts2 = np.float32([[0, 0], [f_s, 0], [0, f_s], [f_s, f_s]])
 
     M = cv2.getPerspectiveTransform(pts1, pts2)
@@ -98,6 +98,8 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
+os.system("spt play --name \"This is The Black Keys\" --playlist")
+
 last_click = 0
 click = False
 
@@ -106,11 +108,10 @@ while True:
     if GPIO.input(10) == GPIO.HIGH and (now - last_click) > 0.4 and not click:
         last_click = now
         click = True
-    elif GPIO.input(10) == GPIO.LOW and (now - last_click) < 1 and click:
-        click = False
-        # asyncio.run(take_photo())
     elif GPIO.input(10) == GPIO.LOW and (now - last_click) > 2 and click:
         click = False
         os.system("spt pb -t")
-
+    elif GPIO.input(10) == GPIO.LOW and (now - last_click) < 1 and click:
+        click = False
+        asyncio.run(take_photo())
 
