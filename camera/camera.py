@@ -36,39 +36,56 @@ async def take_photo():
 
     print("Done. Waiting for next button press...\n")
 
+last_click = 0
 
 def photo_callback(channel):
-    print("photo button")
-    asyncio.run(take_photo())
+    global last_click
+    now = time.time()
+    if (now - last_click) > 10:
+        last_click = time.time()
+        print("photo button")
+        asyncio.run(take_photo())
 
 def pause_callback(channel):
-    print("pause button")
-    os.system("spt pb -t")
+    global last_click
+    now = time.time()
+    if (now - last_click) > 4:
+        last_click = time.time()
+        print("pause button")
+        os.system("spt pb -t")
 
 def next_track_callback(channel):
-    print("next button")
-    os.system("spt pb -n")
+    global last_click
+    now = time.time()
+    if (now - last_click) > 4:
+        last_click = time.time()
+        print("next button")
+        os.system("spt pb -n")
 
 def prev_track_callback(channel):
-    print("prev button")
-    os.system("spt pb -p")
+    global last_click
+    now = time.time()
+    if (now - last_click) > 2:
+        last_click = time.time()
+        print("prev button")
+        os.system("spt pb -p")
 
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
-GPIO.setup(5, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(11, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(13, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
-GPIO.add_event_detect(5, GPIO.RISING, callback=photo_callback, bouncetime=350)
-GPIO.add_event_detect(10, GPIO.RISING, callback=pause_callback, bouncetime=350)
-GPIO.add_event_detect(13, GPIO.RISING, callback=next_track_callback, bouncetime=350)
-GPIO.add_event_detect(18, GPIO.RISING, callback=prev_track_callback, bouncetime=350)
+GPIO.add_event_detect(11, GPIO.FALLING, callback=photo_callback, bouncetime=1000)
+GPIO.add_event_detect(10, GPIO.FALLING, callback=pause_callback, bouncetime=1000)
+GPIO.add_event_detect(13, GPIO.FALLING, callback=next_track_callback, bouncetime=1000)
+GPIO.add_event_detect(18, GPIO.FALLING, callback=prev_track_callback, bouncetime=1000)
 
 print("camera module ready")
 
-os.system("spt play --name \"This is The Black Keys\" --playlist")
+#os.system("spt play --name \"This is The Black Keys\" --playlist")
 
 while True:
     pass
